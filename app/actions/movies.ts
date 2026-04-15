@@ -1,5 +1,9 @@
 'use server';
 
+import pool from '@/lib/mysql';
+import { revalidatePath } from 'next/cache';
+import { createPurchasesTable } from '@/lib/db-init';
+
 const MOVIES = [
   {
     id: 1,
@@ -40,10 +44,44 @@ const MOVIES = [
 ];
 
 export async function getMovies() {
-  // Now returning static data instead of querying the database
   return MOVIES;
 }
 
 export async function getMovieById(id: number) {
   return MOVIES.find((movie) => movie.id === id) ?? null;
+}
+
+export async function isMoviePurchased(userId: number, movieId: number) {
+  try {
+    await createPurchasesTable();
+    const [rows]: any = await pool.query(
+      'SELECT id FROM purchases WHERE user_id = ? AND movie_id = ?',
+      [userId, movieId]
+    );
+    return rows.length > 0;
+  } catch (error) {
+    console.error('Error checking purchase status:', error);
+    return false;
+  }
+}
+
+export async function purchaseMovie(userId: number, movieId: number) {
+  const movie = await getMovieById(movieId);
+  if (!movie) throw new Error('Movie not found');
+
+  try {
+    await createPurchasesTable();
+    await pool.query(
+      'INSERT INTO purchases (user_id, movie_id, price) VALUES (?, ?, ?)',
+      [userId, movieId, movie.price]
+    );
+    revalidatePath(`/movies/${movieId}`);
+    return { success: true };
+  } catch (error: any) {
+    if (error.code === 'ER_DUP_ENTRY') {
+      return { success: true, message: 'Already purchased' };
+    }
+    console.error('Error purchasing movie:', error);
+    return { success: false, error: 'Failed to purchase movie' };
+  }
 }

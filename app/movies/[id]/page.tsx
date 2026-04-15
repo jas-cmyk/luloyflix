@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getMovieById } from "@/app/actions/movies";
+import { getMovieById, isMoviePurchased } from "@/app/actions/movies";
+import { getCurrentUser } from "@/lib/auth";
+import PurchaseButton from "@/components/PurchaseButton";
 
 interface MoviePageProps {
   params: Promise<{
@@ -17,6 +19,9 @@ export default async function MovieDetailPage({ params }: MoviePageProps) {
   if (!movie) {
     notFound();
   }
+
+  const user = await getCurrentUser();
+  const isPurchased = user ? await isMoviePurchased(user.id, movie.id) : false;
 
   return (
     <div className="container mx-auto px-6 py-12">
@@ -54,12 +59,12 @@ export default async function MovieDetailPage({ params }: MoviePageProps) {
             >
               Browse other movies
             </Link>
-            <button
-              type="button"
-              className="rounded-full border border-slate-200 bg-white px-6 py-3 text-sm font-semibold text-slate-950 transition hover:bg-slate-50"
-            >
-              Start watching — ${movie.price}
-            </button>
+            <PurchaseButton 
+              movieId={movie.id} 
+              userId={user?.id || null} 
+              price={movie.price} 
+              isPurchased={isPurchased} 
+            />
           </div>
         </div>
       </div>
