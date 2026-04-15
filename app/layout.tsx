@@ -26,7 +26,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="h-full antialiased font-sans">
+    <html lang="en" className={cn("h-full antialiased font-sans", geistSans.variable, geistMono.variable)}>
       <body className="min-h-full bg-background text-foreground">
         {children}
       </body>

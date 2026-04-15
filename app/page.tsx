@@ -1,9 +1,11 @@
+export const dynamic = "force-dynamic";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { getMovies } from "./actions/movies";
 import MovieCard from "@/components/MovieCard";
 import { getCurrentUser } from "@/lib/auth";
 import { logout } from "./actions/auth";
+
 
 export default async function Home() {
   const movies = await getMovies();

@@ -1,7 +1,7 @@
 'use client';
 
-import { Card, CardContent } from "@/components/ui/card";
-import Image from "next/image";
+import Link from "next/link";
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
 
 interface Movie {
   id: number;
@@ -10,29 +10,51 @@ interface Movie {
   thumbnail_url: string;
   genre: string;
   release_year: number;
+  price: number;
 }
 
 export default function MovieCard({ movie }: { movie: Movie }) {
   return (
-    <Card className="overflow-hidden border-none shadow-sm hover:shadow-md transition-shadow group">
-      <div className="relative aspect-[2/3] overflow-hidden rounded-lg">
+    <Card className="overflow-hidden border-none shadow-xl transition-transform duration-300 hover:-translate-y-1 hover:shadow-2xl group">
+      <div className="relative overflow-hidden">
         <img
           src={movie.thumbnail_url}
           alt={movie.title}
-          className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-300"
+          className="h-[320px] w-full object-cover transition-transform duration-500 group-hover:scale-105"
         />
-        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-          <button className="bg-white text-black rounded-full px-4 py-2 font-semibold text-sm">
-            Play
-          </button>
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-950/30 to-transparent" />
+        <div className="absolute top-4 right-4 z-10">
+          <span className="inline-flex items-center rounded-full bg-slate-950/60 backdrop-blur-md px-3 py-1 text-sm font-bold text-white ring-1 ring-white/20">
+            ${movie.price}
+          </span>
+        </div>
+        <div className="absolute bottom-0 left-0 right-0 p-4">
+          <span className="inline-flex items-center rounded-full bg-white/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.24em] text-white/85">
+            {movie.genre}
+          </span>
+          <h3 className="mt-3 text-xl font-semibold tracking-tight text-white">
+            {movie.title}
+          </h3>
         </div>
       </div>
-      <CardContent className="pt-3 px-1">
-        <h3 className="font-bold text-sm truncate">{movie.title}</h3>
-        <p className="text-xs text-muted-foreground">
-          {movie.release_year} • {movie.genre}
-        </p>
+
+      <CardContent className="pt-5 px-4">
+        <div className="flex items-center justify-between gap-3">
+          <div>
+            <p className="text-base font-semibold">{movie.title}</p>
+            <p className="text-xs text-muted-foreground">{movie.release_year}</p>
+          </div>
+        </div>
       </CardContent>
+
+      <CardFooter className="justify-end px-4 pt-0 pb-4">
+        <Link
+          href={`/movies/${movie.id}`}
+          className="rounded-full bg-slate-950 px-4 py-2 text-sm font-semibold text-white transition hover:bg-slate-900"
+        >
+          Watch now
+        </Link>
+      </CardFooter>
     </Card>
   );
 }
