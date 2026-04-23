@@ -5,6 +5,7 @@ import pool from '@/lib/mysql';
 import { createUsersTable } from '@/lib/db-init';
 import { createSession, deleteSession } from '@/lib/session';
 import { redirect } from 'next/navigation';
+import { revalidatePath } from 'next/cache';
 
 export async function signUp(formData: FormData) {
   const email = formData.get('email') as string;
@@ -24,9 +25,14 @@ export async function signUp(formData: FormData) {
     );
 
     const userId = result.insertId.toString();
-    await createSession(userId);
+    
+    try {
+      await createSession(userId);
+    } catch (sessionError) {
+      console.error('Failed to create session after signup:', sessionError);
+      return { error: 'Account created, but failed to log in automatically. Please try logging in.' };
+    }
 
-    return { success: true, userId };
   } catch (error: any) {
     if (error.code === 'ER_DUP_ENTRY') {
       return { error: 'Email already exists' };
@@ -34,6 +40,9 @@ export async function signUp(formData: FormData) {
     console.error('Sign up error:', error);
     return { error: 'Failed to create account' };
   }
+
+  revalidatePath('/');
+  redirect('/');
 }
 
 export async function login(formData: FormData) {
@@ -63,16 +72,25 @@ export async function login(formData: FormData) {
     }
 
     const userId = user.id.toString();
-    await createSession(userId);
+    
+    try {
+      await createSession(userId);
+    } catch (sessionError) {
+      console.error('Failed to create session during login:', sessionError);
+      return { error: 'Failed to create session' };
+    }
 
-    return { success: true, userId };
   } catch (error) {
     console.error('Login error:', error);
     return { error: 'An error occurred during login' };
   }
+
+  revalidatePath('/');
+  redirect('/');
 }
 
 export async function logout() {
   await deleteSession();
+  revalidatePath('/');
   redirect('/');
 }

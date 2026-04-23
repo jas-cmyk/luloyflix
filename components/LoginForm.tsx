@@ -8,7 +8,6 @@ import Link from 'next/link';
 
 export default function LoginForm() {
   const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
@@ -19,25 +18,11 @@ export default function LoginForm() {
     const formData = new FormData(event.currentTarget);
     const result = await login(formData);
 
-    setLoading(false);
-    if (result.error) {
+    if (result && result.error) {
       setError(result.error);
-    } else if (result.success) {
-      setSuccess(true);
+      setLoading(false);
     }
-  }
-
-  if (success) {
-    return (
-      <Card className="w-[350px]">
-        <CardContent className="pt-6 text-center">
-          <p className="text-green-600 font-semibold mb-4">Login successful!</p>
-          <Button asChild className="w-full">
-            <Link href="/">Go to Home</Link>
-          </Button>
-        </CardContent>
-      </Card>
-    );
+    // If successful, the server action will redirect automatically
   }
 
   return (

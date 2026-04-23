@@ -2,6 +2,9 @@
 
 import Link from "next/link";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import { Star, Lock } from "lucide-react";
+import { useLanguage } from "@/lib/contexts";
+import { Tier, getTierAccess, cn } from "@/lib/utils";
 
 interface Movie {
   id: number;
@@ -10,55 +13,82 @@ interface Movie {
   thumbnail_url: string;
   genre: string;
   release_year: number;
-  price: number;
+  tier_required: Tier;
 }
 
-export default function MovieCard({ movie, isPurchased }: { movie: Movie, isPurchased: boolean }) {
-  return (
-    <Card className="overflow-hidden border-none shadow-xl transition-transform duration-300 hover:-translate-y-1 hover:shadow-2xl group">
-      <div className="relative overflow-hidden">
-        <img
-          src={movie.thumbnail_url}
-          alt={movie.title}
-          className="h-[320px] w-full object-cover transition-transform duration-500 group-hover:scale-105"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-950/30 to-transparent" />
-        <div className="absolute top-4 right-4 z-10">
-          {isPurchased ? (
-            <span className="inline-flex items-center rounded-full bg-green-500/80 backdrop-blur-md px-3 py-1 text-sm font-bold text-white ring-1 ring-white/20">
-              Purchased
-            </span>
-          ) : (
-            <span className="inline-flex items-center rounded-full bg-slate-950/60 backdrop-blur-md px-3 py-1 text-sm font-bold text-white ring-1 ring-white/20">
-              ${movie.price}
-            </span>
-          )}
-        </div>
-        <div className="absolute bottom-0 left-0 right-0 p-4">
-          <span className="inline-flex items-center rounded-full bg-white/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.24em] text-white/85">
-            {movie.genre}
-          </span>
-          <h3 className="mt-3 text-xl font-semibold tracking-tight text-white">
-            {movie.title}
-          </h3>
-        </div>
-      </div>
+export default function MovieCard({ 
+  movie, 
+  averageRating,
+  userTier 
+}: { 
+  movie: Movie, 
+  averageRating: number,
+  userTier: Tier
+}) {
+  const { t } = useLanguage();
+  const hasAccess = getTierAccess(userTier, movie.tier_required);
 
-      <CardContent className="pt-5 px-4">
-        <div className="flex items-center justify-between gap-3">
-          <div>
-            <p className="text-base font-semibold">{movie.title}</p>
-            <p className="text-xs text-muted-foreground">{movie.release_year}</p>
+  const tierColors = {
+    none: 'bg-slate-500',
+    starter: 'bg-green-600',
+    plus: 'bg-blue-600',
+    premium: 'bg-purple-600',
+  };
+
+  return (
+    <Card className="overflow-hidden border-none shadow-xl transition-transform duration-300 hover:-translate-y-1 hover:shadow-2xl group bg-card">
+      <Link href={`/movies/${movie.id}`}>
+        <div className="relative overflow-hidden aspect-[2/3]">
+          <img
+            src={movie.thumbnail_url}
+            alt={movie.title}
+            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-950/30 to-transparent" />
+          
+          {/* Tier Badge */}
+          <div className="absolute top-3 left-3 z-10">
+            <span className={cn(
+              "inline-flex items-center rounded-md px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-white shadow-sm",
+              tierColors[movie.tier_required]
+            )}>
+              {t(movie.tier_required)}
+            </span>
           </div>
+
+          {!hasAccess && (
+            <div className="absolute inset-0 flex items-center justify-center bg-black/40 backdrop-blur-[2px] z-20">
+              <div className="bg-background/90 p-3 rounded-full shadow-lg">
+                <Lock className="h-6 w-6 text-primary" />
+              </div>
+            </div>
+          )}
+
+          <div className="absolute bottom-0 left-0 right-0 p-4">
+            <span className="inline-flex items-center rounded-full bg-white/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.24em] text-white/85">
+              {movie.genre}
+            </span>
+            <div className="flex items-center gap-1 mt-2">
+              <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
+              <span className="text-xs font-bold text-white">{averageRating.toFixed(1)}</span>
+            </div>
+          </div>
+        </div>
+      </Link>
+
+      <CardContent className="pt-4 px-4">
+        <div className="flex flex-col gap-1">
+          <p className="text-sm font-bold truncate">{movie.title}</p>
+          <p className="text-xs text-muted-foreground">{movie.release_year}</p>
         </div>
       </CardContent>
 
       <CardFooter className="justify-end px-4 pt-0 pb-4">
         <Link
           href={`/movies/${movie.id}`}
-          className="rounded-full bg-slate-950 px-4 py-2 text-sm font-semibold text-white transition hover:bg-slate-900"
+          className="w-full text-center rounded-full bg-primary px-4 py-2 text-xs font-bold text-primary-foreground transition hover:opacity-90"
         >
-          {isPurchased ? 'Watch now' : 'View details'}
+          {hasAccess ? t('watch') : t('view_details')}
         </Link>
       </CardFooter>
     </Card>

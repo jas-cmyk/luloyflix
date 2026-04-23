@@ -6,7 +6,7 @@ export async function getCurrentUser() {
   if (!session || !session.userId) return null;
 
   try {
-    const [rows]: any = await pool.query('SELECT id, email FROM users WHERE id = ?', [session.userId]);
+    const [rows]: any = await pool.query('SELECT id, email, subscription_tier FROM users WHERE id = ?', [session.userId]);
     return rows[0] || null;
   } catch (error) {
     return null;
