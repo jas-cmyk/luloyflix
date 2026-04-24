@@ -4,6 +4,7 @@ import { useLanguage } from "@/lib/contexts";
 import MovieCard from "@/components/MovieCard";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+
 import { Tier } from "@/lib/utils";
 
 interface HomeContentProps {

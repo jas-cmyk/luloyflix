@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
-import { Star, Lock } from "lucide-react";
+import { Star } from "lucide-react";
 import { useLanguage } from "@/lib/contexts";
 import { Tier, getTierAccess, cn } from "@/lib/utils";
 
@@ -55,14 +55,6 @@ export default function MovieCard({
               {t(movie.tier_required)}
             </span>
           </div>
-
-          {!hasAccess && (
-            <div className="absolute inset-0 flex items-center justify-center bg-black/40 backdrop-blur-[2px] z-20">
-              <div className="bg-background/90 p-3 rounded-full shadow-lg">
-                <Lock className="h-6 w-6 text-primary" />
-              </div>
-            </div>
-          )}
 
           <div className="absolute bottom-0 left-0 right-0 p-4">
             <span className="inline-flex items-center rounded-full bg-white/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.24em] text-white/85">
