@@ -108,6 +108,32 @@ export async function getMovieRating(movieId: number) {
   }
 }
 
+export async function getMovieRatings(movieIds: number[]): Promise<Record<number, { average: number, count: number }>> {
+  if (!movieIds.length) return {};
+  try {
+    await createFeaturesTables();
+    const [rows]: any = await pool.query(
+      `SELECT movie_id, AVG(rating) as average, COUNT(*) as count 
+       FROM ratings 
+       WHERE movie_id IN (?) 
+       GROUP BY movie_id`,
+      [movieIds]
+    );
+
+    const ratings: Record<number, { average: number, count: number }> = {};
+    rows.forEach((row: any) => {
+      ratings[row.movie_id] = {
+        average: parseFloat(row.average) || 0,
+        count: row.count || 0
+      };
+    });
+    return ratings;
+  } catch (error) {
+    console.error('Error fetching bulk ratings:', error);
+    return {};
+  }
+}
+
 export async function getUserRating(userId: number, movieId: number) {
   try {
     await createFeaturesTables();
@@ -118,5 +144,45 @@ export async function getUserRating(userId: number, movieId: number) {
     return rows[0]?.rating || 0;
   } catch (error) {
     return 0;
+  }
+}
+
+export async function getMostViewedMovies(limit: number = 10): Promise<{ movie_id: number, views: number }[]> {
+  try {
+    await createFeaturesTables();
+    const [rows]: any = await pool.query(
+      `SELECT movie_id, COUNT(*) as views 
+       FROM recently_watched 
+       GROUP BY movie_id 
+       ORDER BY views DESC 
+       LIMIT ?`,
+      [limit]
+    );
+    return rows.map((r: any) => ({ movie_id: r.movie_id, views: r.views }));
+  } catch (error) {
+    console.error('Error fetching most viewed:', error);
+    return [];
+  }
+}
+
+export async function getMostRatedMovies(limit: number = 10): Promise<{ movie_id: number, average: number, count: number }[]> {
+  try {
+    await createFeaturesTables();
+    const [rows]: any = await pool.query(
+      `SELECT movie_id, AVG(rating) as average, COUNT(*) as count 
+       FROM ratings 
+       GROUP BY movie_id 
+       ORDER BY average DESC, count DESC 
+       LIMIT ?`,
+      [limit]
+    );
+    return rows.map((r: any) => ({ 
+      movie_id: r.movie_id, 
+      average: parseFloat(r.average) || 0, 
+      count: r.count 
+    }));
+  } catch (error) {
+    console.error('Error fetching most rated:', error);
+    return [];
   }
 }

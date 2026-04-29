@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/lib/auth";
-import { getMovies } from "@/app/actions/movies";
+import { getMovies, getTransactions } from "@/app/actions/movies";
 import { getFavorites, getRecentlyWatched } from "@/app/actions/features";
 import SettingsContent from "@/components/SettingsContent";
 
@@ -16,6 +16,7 @@ export default async function SettingsPage() {
   const allMovies = await getMovies();
   const favoriteIds = await getFavorites(user.id);
   const recentIds = await getRecentlyWatched(user.id);
+  const transactions = await getTransactions(user.id);
 
   const favoriteMovies = allMovies.filter(m => favoriteIds.includes(m.id));
   const recentMovies = allMovies.filter(m => recentIds.includes(m.id));
@@ -25,7 +26,8 @@ export default async function SettingsPage() {
       <SettingsContent 
         user={user} 
         favoriteMovies={favoriteMovies} 
-        recentMovies={recentMovies} 
+        recentMovies={recentMovies}
+        transactions={transactions}
       />
     </div>
   );

@@ -4,20 +4,27 @@ import { useState } from 'react';
 import { useLanguage } from "@/lib/contexts";
 import { Tier, cn } from "@/lib/utils";
 import { updateSubscription } from "@/app/actions/movies";
+import { redeemCode } from "@/app/actions/redeem";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Check, User, CreditCard } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Check, User, CreditCard, History, Ticket, Loader2 } from "lucide-react";
 import Link from "next/link";
+import { Transaction } from "@/app/actions/movies";
 
 interface SettingsContentProps {
   user: any;
   favoriteMovies: any[];
   recentMovies: any[];
+  transactions: Transaction[];
 }
 
-export default function SettingsContent({ user, favoriteMovies, recentMovies }: SettingsContentProps) {
+export default function SettingsContent({ user, favoriteMovies, recentMovies, transactions }: SettingsContentProps) {
   const { t } = useLanguage();
   const [loadingTier, setLoadingTier] = useState<Tier | null>(null);
+  const [code, setCode] = useState("");
+  const [redeeming, setRedeeming] = useState(false);
+  const [redeemStatus, setRedeemStatus] = useState<{ type: 'success' | 'error', message: string } | null>(null);
 
   const tiers: { id: Tier, price: number, features: string[] }[] = [
     { id: 'starter', price: 100, features: ['Watch Movies (Limited)', 'Ads included', 'Standard Quality (720p)'] },
@@ -31,6 +38,23 @@ export default function SettingsContent({ user, favoriteMovies, recentMovies }: 
       await updateSubscription(user.id, tier);
     } finally {
       setLoadingTier(null);
+    }
+  };
+
+  const handleRedeem = async () => {
+    if (!code.trim()) return;
+    setRedeeming(true);
+    setRedeemStatus(null);
+    try {
+      const res = await redeemCode(user.id, code.trim());
+      if (res.success) {
+        setRedeemStatus({ type: 'success', message: res.message || t('redeem_success') });
+        setCode("");
+      } else {
+        setRedeemStatus({ type: 'error', message: res.error || t('redeem_error') });
+      }
+    } finally {
+      setRedeeming(false);
     }
   };
 
@@ -139,6 +163,85 @@ export default function SettingsContent({ user, favoriteMovies, recentMovies }: 
             ) : (
               <p className="text-sm text-muted-foreground">{t('no_favorites')}</p>
             )}
+          </section>
+
+          {/* Redeem Code Section */}
+          <section>
+            <div className="flex items-center gap-3 mb-6">
+              <Ticket className="h-6 w-6 text-primary" />
+              <h2 className="text-2xl font-bold">{t('redeem_code')}</h2>
+            </div>
+            <Card>
+              <CardContent className="pt-6">
+                <div className="flex flex-col sm:flex-row gap-4">
+                  <div className="flex-1">
+                    <Input 
+                      placeholder={t('redeem_placeholder')}
+                      value={code}
+                      onChange={(e) => setCode(e.target.value.toUpperCase())}
+                      className="uppercase font-mono tracking-widest"
+                    />
+                  </div>
+                  <Button 
+                    onClick={handleRedeem} 
+                    disabled={redeeming || !code.trim()}
+                    className="min-w-[140px]"
+                  >
+                    {redeeming ? <Loader2 className="h-4 w-4 animate-spin" /> : t('redeem_button')}
+                  </Button>
+                </div>
+                {redeemStatus && (
+                  <p className={cn(
+                    "mt-4 text-sm font-bold",
+                    redeemStatus.type === 'success' ? "text-green-500" : "text-red-500"
+                  )}>
+                    {redeemStatus.message}
+                  </p>
+                )}
+              </CardContent>
+            </Card>
+          </section>
+
+          {/* Transaction History Section */}
+          <section>
+            <div className="flex items-center gap-3 mb-6">
+              <History className="h-6 w-6 text-primary" />
+              <h2 className="text-2xl font-bold">{t('transaction_history')}</h2>
+            </div>
+            <Card>
+              <CardContent className="p-0">
+                <div className="overflow-x-auto">
+                  <table className="w-full text-sm">
+                    <thead>
+                      <tr className="border-b bg-muted/50">
+                        <th className="px-4 py-3 text-left font-medium">{t('date')}</th>
+                        <th className="px-4 py-3 text-left font-medium">{t('description')}</th>
+                        <th className="px-4 py-3 text-right font-medium">{t('amount')}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {transactions.length > 0 ? (
+                        transactions.map((tx) => (
+                          <tr key={tx.id} className="border-b last:border-0 hover:bg-muted/30 transition-colors">
+                            <td className="px-4 py-3 text-muted-foreground">
+                              {new Date(tx.created_at).toLocaleDateString()}
+                            </td>
+                            <td className="px-4 py-3 font-medium">{tx.description}</td>
+                            <td className="px-4 py-3 text-right font-bold">₱ {tx.amount}</td>
+                          </tr>
+                        ))
+                      ) : (
+                        <tr>
+                          <td colSpan={3} className="px-4 py-8 text-center text-muted-foreground italic">
+                            {t('no_transactions')}
+                          </td>
+                        </tr>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              </CardContent>
+            </Card>
           </section>
         </div>
       </div>
