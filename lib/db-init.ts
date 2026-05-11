@@ -7,6 +7,7 @@ export async function createUsersTable() {
       email VARCHAR(255) NOT NULL UNIQUE,
       password VARCHAR(255) NOT NULL,
       subscription_tier ENUM('none', 'starter', 'plus', 'premium') DEFAULT 'none',
+      is_admin BOOLEAN DEFAULT FALSE,
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )
   `;
@@ -15,6 +16,13 @@ export async function createUsersTable() {
   // Migration to add subscription_tier if it doesn't exist (for existing tables)
   try {
     await pool.query("ALTER TABLE users ADD COLUMN subscription_tier ENUM('none', 'starter', 'plus', 'premium') DEFAULT 'none'");
+  } catch (e) {
+    // Ignore error if column already exists
+  }
+
+  // Migration to add is_admin if it doesn't exist
+  try {
+    await pool.query("ALTER TABLE users ADD COLUMN is_admin BOOLEAN DEFAULT FALSE");
   } catch (e) {
     // Ignore error if column already exists
   }
