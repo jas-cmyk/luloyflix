@@ -273,8 +273,47 @@ export default function AdminContent({
 
           {activeTab === 'ads' && (
             <div className="p-6">
+              <div className="bg-muted/30 p-6 rounded-3xl mb-8 border border-dashed border-primary/30">
+                <h2 className="text-lg font-bold mb-4 flex items-center gap-2">
+                  <Plus className="h-5 w-5 text-primary" /> Create New Ad
+                </h2>
+                <form action={async (formData) => {
+                  const res = await createAd(formData);
+                  if (res.success) {
+                    alert('Ad created successfully!');
+                    window.location.reload();
+                  } else {
+                    alert(res.error);
+                  }
+                }} className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-1">
+                    <label className="text-[10px] font-bold uppercase text-muted-foreground">Title</label>
+                    <Input name="title" required placeholder="Summer Sale" className="rounded-xl" />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-[10px] font-bold uppercase text-muted-foreground">Link URL</label>
+                    <Input name="link_url" required placeholder="/settings" className="rounded-xl" />
+                  </div>
+                  <div className="space-y-1 md:col-span-2">
+                    <label className="text-[10px] font-bold uppercase text-muted-foreground">Description</label>
+                    <Input name="description" required placeholder="Get 50% off on all premium plans!" className="rounded-xl" />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-[10px] font-bold uppercase text-muted-foreground">Image URL</label>
+                    <Input name="image_url" required placeholder="https://..." className="rounded-xl" />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-[10px] font-bold uppercase text-muted-foreground">Video URL (Optional)</label>
+                    <Input name="video_url" placeholder="https://..." className="rounded-xl" />
+                  </div>
+                  <div className="md:col-span-2 flex justify-end">
+                    <Button type="submit" className="rounded-xl">Create Ad Campaign</Button>
+                  </div>
+                </form>
+              </div>
+
               <div className="flex justify-between items-center mb-6">
-                <h2 className="text-xl font-bold">Ad Campaigns</h2>
+                <h2 className="text-xl font-bold">Active Campaigns</h2>
               </div>
               <div className="grid gap-4">
                 {ads.map((ad) => (

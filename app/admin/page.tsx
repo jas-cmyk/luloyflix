@@ -14,12 +14,9 @@ export const dynamic = "force-dynamic";
 export default async function AdminPage() {
   const user = await getCurrentUser();
 
-  // Temporary: Allowed for everyone for testing
-  /*
   if (!user || !user.is_admin) {
     redirect("/");
   }
-  */
 
   const [stats, users, transactions, ads, codes] = await Promise.all([
     getAdminStats(),

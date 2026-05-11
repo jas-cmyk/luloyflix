@@ -5,30 +5,44 @@ import { revalidatePath } from 'next/cache';
 import { getCurrentUser } from '@/lib/auth';
 import { Tier } from '@/lib/utils';
 
+import { createUsersTable, createTransactionsTable, createAdsTable, createRedeemCodesTable } from '@/lib/db-init';
+
 async function ensureAdmin() {
   const user = await getCurrentUser();
-  // Temporary: Disabled check for testing
-  /*
   if (!user || !user.is_admin) {
     throw new Error('Unauthorized');
   }
-  */
   return user;
 }
 
 export async function getAdminStats() {
   await ensureAdmin();
   try {
-    const [userCount]: any = await pool.query('SELECT COUNT(*) as count FROM users');
-    const [totalRevenue]: any = await pool.query('SELECT SUM(amount) as total FROM transactions WHERE type = "subscription"');
-    const [adCount]: any = await pool.query('SELECT COUNT(*) as count FROM ads');
-    const [unusedCodes]: any = await pool.query('SELECT COUNT(*) as count FROM redeem_codes WHERE is_used = FALSE');
+    // Ensure tables exist before querying (handles Aiven/Cloud cold starts)
+    await Promise.all([
+      createUsersTable(),
+      createTransactionsTable(),
+      createAdsTable(),
+      createRedeemCodesTable()
+    ]);
+
+    const [
+      [userCount],
+      [totalRevenue],
+      [adCount],
+      [unusedCodes]
+    ]: any = await Promise.all([
+      pool.query('SELECT COUNT(*) as count FROM users'),
+      pool.query('SELECT COALESCE(SUM(amount), 0) as total FROM transactions WHERE type = "subscription"'),
+      pool.query('SELECT COUNT(*) as count FROM ads'),
+      pool.query('SELECT COUNT(*) as count FROM redeem_codes WHERE is_used = FALSE')
+    ]);
 
     return {
-      users: userCount[0].count,
-      revenue: totalRevenue[0].total || 0,
-      ads: adCount[0].count,
-      unusedCodes: unusedCodes[0].count
+      users: userCount[0]?.count || 0,
+      revenue: parseFloat(totalRevenue[0]?.total) || 0,
+      ads: adCount[0]?.count || 0,
+      unusedCodes: unusedCodes[0]?.count || 0
     };
   } catch (error) {
     console.error('Error fetching admin stats:', error);
