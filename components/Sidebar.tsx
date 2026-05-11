@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { Menu, X, Settings, Moon, Sun, Globe, Home, Heart, History, LogOut, LogIn, UserPlus } from 'lucide-react';
+import { Menu, X, Settings, Moon, Sun, Globe, Home, Heart, History, LogOut, LogIn, UserPlus, TrendingUp, Star } from 'lucide-react';
 import { Button } from './ui/button';
 import { useTheme, useLanguage } from '@/lib/contexts';
 import { cn } from '@/lib/utils';
@@ -21,6 +21,8 @@ export default function Sidebar({ user, logoutAction }: SidebarProps) {
 
   const navLinks = [
     { href: '/', label: t('home'), icon: Home },
+    { href: '/most-viewed', label: t('most_viewed'), icon: TrendingUp },
+    { href: '/most-rated', label: t('most_rated'), icon: Star },
     ...(user ? [
       { href: '/settings', label: t('settings'), icon: Settings },
     ] : []),

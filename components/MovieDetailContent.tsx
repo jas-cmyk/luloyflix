@@ -8,6 +8,7 @@ import { toggleFavorite, trackRecentlyWatched } from "@/app/actions/features";
 import WatchButton from "@/components/WatchButton";
 import MovieMedia from "@/components/MovieMedia";
 import Rating from "@/components/Rating";
+import AdBanner from "@/components/AdBanner";
 import { Heart, Download, Info, ShieldAlert, Play } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -77,6 +78,7 @@ export default function MovieDetailContent({
               title={movie.title} 
               thumbnailUrl={movie.thumbnail_url} 
               trailerUrl={movie.trailer_url}
+              userTier={userTier}
               onPlay={onTrailerPlay}
             />
           </div>
@@ -148,6 +150,7 @@ export default function MovieDetailContent({
               userId={user?.id || null} 
               hasAccess={hasAccess}
             />
+            <AdBanner userTier={userTier} />
           </div>
         </div>
       </div>

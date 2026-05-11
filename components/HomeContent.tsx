@@ -4,6 +4,7 @@ import { useLanguage } from "@/lib/contexts";
 import MovieCard from "@/components/MovieCard";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import AdBanner from "@/components/AdBanner";
 
 import { Tier } from "@/lib/utils";
 
@@ -71,10 +72,15 @@ export default function HomeContent({
               <section key={genre} className="max-w-6xl mx-auto">
                 <div className="flex items-center justify-between mb-6">
                   <h2 className="text-2xl font-bold tracking-tight">{genre}</h2>
-                  <span className="text-sm text-muted-foreground">{genreMovies.length} {t('movies')}</span>
+                  <Link 
+                    href={`/genre/${encodeURIComponent(genre.toLowerCase())}`}
+                    className="text-sm font-bold text-primary hover:underline transition-all"
+                  >
+                    View All →
+                  </Link>
                 </div>
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-                  {genreMovies.map((movie) => (
+                  {genreMovies.slice(0, 4).map((movie) => (
                     <MovieCard 
                       key={movie.id} 
                       movie={movie} 
@@ -88,6 +94,9 @@ export default function HomeContent({
           </div>
         </>
       )}
+      <div className="max-w-6xl mx-auto px-4 mt-16">
+        <AdBanner userTier={userTier} />
+      </div>
     </>
   );
 }
