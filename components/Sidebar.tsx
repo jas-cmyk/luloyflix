@@ -26,9 +26,8 @@ export default function Sidebar({ user, logoutAction }: SidebarProps) {
     ...(user ? [
       { href: '/settings', label: t('settings'), icon: Settings },
     ] : []),
-    ...(user?.is_admin ? [
-      { href: '/admin', label: 'Admin', icon: Shield },
-    ] : []),
+    // Temporary: Shown for everyone for testing
+    { href: '/admin', label: 'Admin', icon: Shield },
   ];
 
   return (
