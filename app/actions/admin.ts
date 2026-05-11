@@ -24,7 +24,10 @@ export async function getAdminStats() {
       createTransactionsTable(),
       createAdsTable(),
       createRedeemCodesTable()
-    ]);
+    ]).catch(err => {
+      console.error('Migration error in getAdminStats:', err);
+      throw err;
+    });
 
     const [
       userResult,
@@ -33,12 +36,11 @@ export async function getAdminStats() {
       codeResult
     ]: any = await Promise.all([
       pool.query('SELECT COUNT(*) as count FROM users'),
-      pool.query('SELECT COALESCE(SUM(amount), 0) as total FROM transactions WHERE type = "subscription"'),
+      pool.query("SELECT COALESCE(SUM(amount), 0) as total FROM transactions WHERE type = 'subscription'"),
       pool.query('SELECT COUNT(*) as count FROM ads'),
       pool.query('SELECT COUNT(*) as count FROM redeem_codes WHERE is_used = FALSE')
     ]);
 
-    // mysql2 returns [rows, fields]. We take rows[0]
     const userRows = userResult[0];
     const revenueRows = revenueResult[0];
     const adRows = adResult[0];
@@ -48,11 +50,19 @@ export async function getAdminStats() {
       users: Number(userRows[0]?.count || 0),
       revenue: parseFloat(revenueRows[0]?.total || 0),
       ads: Number(adRows[0]?.count || 0),
-      unusedCodes: Number(codeRows[0]?.count || 0)
+      unusedCodes: Number(codeRows[0]?.count || 0),
+      success: true
     };
-  } catch (error) {
-    console.error('Error fetching admin stats:', error);
-    return { users: 0, revenue: 0, ads: 0, unusedCodes: 0 };
+  } catch (error: any) {
+    console.error('CRITICAL: Error fetching admin stats:', error);
+    return { 
+      users: 0, 
+      revenue: 0, 
+      ads: 0, 
+      unusedCodes: 0, 
+      error: error.message || 'Unknown database error',
+      success: false
+    };
   }
 }
 

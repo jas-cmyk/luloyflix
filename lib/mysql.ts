@@ -17,16 +17,21 @@ const getPoolConfig = (): mysql.PoolOptions => {
     idleTimeout: 60000,
   };
 
+  // Fix escaped newlines in CA string if pulled from Vercel/CLI
+  const ca = process.env.DATABASE_SSL_CA?.replace(/\\n/g, '\n');
+
+  const sslConfig = ca ? {
+    ca,
+    rejectUnauthorized: true
+  } : {
+    rejectUnauthorized: false
+  };
+
   if (process.env.DATABASE_URL) {
     return {
       uri: process.env.DATABASE_URL,
       ...commonConfig,
-      ssl: process.env.DATABASE_SSL_CA ? {
-        ca: process.env.DATABASE_SSL_CA,
-        rejectUnauthorized: true
-      } : (process.env.NODE_ENV === 'production' ? {
-        rejectUnauthorized: false
-      } : undefined),
+      ssl: sslConfig,
     };
   }
 
@@ -37,12 +42,7 @@ const getPoolConfig = (): mysql.PoolOptions => {
     database: process.env.DATABASE_NAME,
     port: parseInt(process.env.DATABASE_PORT || '3306'),
     ...commonConfig,
-    ssl: process.env.DATABASE_SSL_CA ? {
-      ca: process.env.DATABASE_SSL_CA,
-      rejectUnauthorized: true
-    } : (process.env.NODE_ENV === 'production' ? {
-      rejectUnauthorized: false
-    } : undefined),
+    ssl: sslConfig,
   };
 };
 

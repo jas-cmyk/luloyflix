@@ -106,6 +106,15 @@ export default function AdminContent({
 
   return (
     <div className="space-y-8">
+      {stats.error && (
+        <div className="bg-destructive/10 border border-destructive/20 text-destructive px-6 py-4 rounded-3xl flex items-center gap-3">
+          <ShieldOff className="h-5 w-5" />
+          <div>
+            <p className="font-bold text-sm">Database Error</p>
+            <p className="text-xs opacity-80">{stats.error}</p>
+          </div>
+        </div>
+      )}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <h1 className="text-4xl font-black tracking-tight">Admin Dashboard</h1>
         <div className="flex gap-2 bg-muted p-1 rounded-xl">
