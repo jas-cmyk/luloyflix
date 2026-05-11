@@ -79,6 +79,21 @@ export async function createAdsTable() {
   } catch (e) {
     // Ignore error if column already exists
   }
+
+  // Seed initial ads if empty
+  try {
+    const [rows]: any = await pool.query('SELECT COUNT(*) as count FROM ads');
+    if (rows[0].count === 0) {
+      await pool.query(`
+        INSERT INTO ads (title, description, image_url, video_url, link_url) VALUES 
+        ('Luloyflix Premium', 'Upgrade now for 4K streaming and no ads!', 'https://images.unsplash.com/photo-1522869635100-9f4c5e86aa37?auto=format&fit=crop&q=80&w=1000', 'https://res.cloudinary.com/demo/video/upload/v1/sea_turtle.mp4', '/settings'),
+        ('New Action Hits', 'Watch the latest action blockbusters only on Luloyflix.', 'https://images.unsplash.com/photo-1536440136628-849c177e76a1?auto=format&fit=crop&q=80&w=1000', 'https://res.cloudinary.com/demo/video/upload/v1/dog.mp4', '/'),
+        ('Family Night Special', 'Discover movies the whole family will love.', 'https://images.unsplash.com/photo-1485846234645-a62644f84728?auto=format&fit=crop&q=80&w=1000', 'https://res.cloudinary.com/demo/video/upload/v1/elephants.mp4', '/')
+      `);
+    }
+  } catch (e) {
+    console.error('Error seeding ads:', e);
+  }
 }
 
 export async function createRedeemCodesTable() {

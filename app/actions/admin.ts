@@ -27,10 +27,10 @@ export async function getAdminStats() {
     ]);
 
     const [
-      [userCount],
-      [totalRevenue],
-      [adCount],
-      [unusedCodes]
+      userResult,
+      revenueResult,
+      adResult,
+      codeResult
     ]: any = await Promise.all([
       pool.query('SELECT COUNT(*) as count FROM users'),
       pool.query('SELECT COALESCE(SUM(amount), 0) as total FROM transactions WHERE type = "subscription"'),
@@ -38,11 +38,17 @@ export async function getAdminStats() {
       pool.query('SELECT COUNT(*) as count FROM redeem_codes WHERE is_used = FALSE')
     ]);
 
+    // mysql2 returns [rows, fields]. We take rows[0]
+    const userRows = userResult[0];
+    const revenueRows = revenueResult[0];
+    const adRows = adResult[0];
+    const codeRows = codeResult[0];
+
     return {
-      users: userCount[0]?.count || 0,
-      revenue: parseFloat(totalRevenue[0]?.total) || 0,
-      ads: adCount[0]?.count || 0,
-      unusedCodes: unusedCodes[0]?.count || 0
+      users: Number(userRows[0]?.count || 0),
+      revenue: parseFloat(revenueRows[0]?.total || 0),
+      ads: Number(adRows[0]?.count || 0),
+      unusedCodes: Number(codeRows[0]?.count || 0)
     };
   } catch (error) {
     console.error('Error fetching admin stats:', error);
