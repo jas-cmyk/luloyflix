@@ -85,6 +85,10 @@ export default function MovieMedia({ title, thumbnailUrl, trailerUrl, userTier, 
               autoPlay 
               muted 
               className="w-full h-full object-cover opacity-60"
+              controlsList="nodownload"
+              onContextMenu={(e) => e.preventDefault()}
+              disablePictureInPicture
+              disableRemotePlayback
             />
           ) : (
             <img 
@@ -148,6 +152,10 @@ export default function MovieMedia({ title, thumbnailUrl, trailerUrl, userTier, 
             controls
             autoPlay
             className="w-full h-full"
+            controlsList="nodownload"
+            onContextMenu={(e) => e.preventDefault()}
+            disablePictureInPicture
+            disableRemotePlayback
           >
             Your browser does not support the video tag.
           </video>
