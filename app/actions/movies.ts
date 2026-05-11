@@ -135,14 +135,134 @@ const MOVIES: Movie[] = [
   },
     {
     id: 11,
-    title: 'Anime',
-    description: 'A Minecraft Movie is an adventure fantasy movie based on the popular game Minecraft. It follows a group of characters who are transported into a blocky, pixel-style world.',
-    thumbnail_url: 'https://res.cloudinary.com/dutvfefbe/image/upload/v1777250866/rs_w_1280_jvzylo.webp',
-    trailer_url: 'https://res.cloudinary.com/demo/video/upload/v1/elephants.mp4',
+    title: 'The Angry Birds Movie',
+    description: 'On an island populated entirely by happy, flightless birds, Red—a bird with a massive temper problem—has always been the odd one out. While the rest of the community spends their days in a state of blissful, naive harmony, Red is stuck in court-ordered anger management classes alongside the hyperactive Chuck and the volatile Bomb.',
+    thumbnail_url: 'https://res.cloudinary.com/dutvfefbe/image/upload/v1778154356/The_Angry_Birds_Movie_om3zok.jpg',
+    trailer_url: 'https://res.cloudinary.com/dutvfefbe/video/upload/v1778154810/YTDown_YouTube_THE-ANGRY-BIRDS-MOVIE-Official-Theatrica_Media_QRmKa7vvct4_001_1080p_pnqftz.mp4',
+    genre: 'Animation',
+    release_year: 2016,
+    tier_required: 'starter'
+  },
+  {
+    id: 12,
+    title: 'The Angry Birds Movie 2',
+    description: 'The ongoing prank war between Bird Island and Piggy Island is cut short when giant ice balls begin raining down from the sky. A new threat has emerged from a mysterious third island—Eagle Island—led by the bitter and brilliant Zeta. Tired of her frozen wasteland, Zeta plans to seize both Bird and Pig Islands for herself, turning them into her own tropical paradise by freezing the inhabitants out.',
+    thumbnail_url: 'https://res.cloudinary.com/dutvfefbe/image/upload/v1778155167/Watch_The_Angry_Birds_Movie_2_Full_Movie_HD_facts_Online_zcudx5.jpg',
+    trailer_url: '',
+    genre: 'Animation',
+    release_year: 2019,
+    tier_required: 'plus'
+  },
+  {
+    id: 13,
+    title: 'Shrek',
+    description: 'Shrek is a reclusive, territorial ogre who loves the solitude of his swamp. His peace is shattered when the vertically challenged Lord Farquaad evicts every fairy tale creature in the kingdom—from Pinocchio to the Three Little Pigs—straight into Shreks backyard.To get his swamp back, Shrek strikes a deal with Farquaad: he must rescue the beautiful Princess Fiona from a fire-breathing dragon and bring her back to be the Lord’s bride.',
+    thumbnail_url: 'https://res.cloudinary.com/dutvfefbe/image/upload/v1778155538/Shrek_2001_wlx5zm.jpg',
+    trailer_url: '',
+    genre: 'Animation',
+    release_year: 2001,
+    tier_required: 'starter'
+  },
+  {
+    id: 14,
+    title: 'The Lorax',
+    description: 'The story is set in Thneedville, a walled-off city where "nature" is powered by batteries and the grass is made of silicone. Twelve-year-old Ted is willing to do anything to win the heart of his crush, Audrey, who dreams of seeing a real, living tree. Following the cryptic advice of his grandmother, Ted sneaks outside the city walls to find the Once-ler—a mysterious hermit living in a desolate wasteland—who holds the secret of what happened to the trees.',
+    thumbnail_url: 'https://res.cloudinary.com/dutvfefbe/image/upload/v1778156381/Dr__Seuss_The_Lorax_2012_fueclf.jpg',
+    trailer_url: '',
+    genre: 'Animation',
+    release_year: 2012,
+    tier_required: 'premium'
+  },
+  {
+    id: 15,
+    title: 'Trolls',
+    description: 'The Trolls are the happiest creatures to ever exist. They live in a constant cycle of singing, dancing, and hourly "hug times." Their leader, Poppy, is the most optimistic of them all, believing that life is just one big party. However, their joy is threatened by the Bergens—miserable, giant creatures who believe the only way to feel happy is to eat a Troll.',
+    thumbnail_url: 'https://res.cloudinary.com/dutvfefbe/image/upload/v1778156821/download_edinxm.jpg',
+    trailer_url: '',
+    genre: 'Animation',
+    release_year: 2016,
+    tier_required: 'plus'
+  },
+  {
+    id: 16,
+    title: 'Transformers',
+    description: 'The story follows Sam Witwicky, an ordinary teenager who just wants a car and a chance with his crush, Mikaela Banes. His life changes forever when the beat-up 1976 Camaro he buys turns out to be Bumblebee, an advanced alien scout. Sam discovers he holds the key to finding the AllSpark—an ancient artifact capable of creating life—which has been hidden on Earth for centuries. This puts him directly in the crosshairs of a civil war between two robotic factions from the planet Cybertron.',
+    thumbnail_url: 'https://res.cloudinary.com/dutvfefbe/image/upload/v1778157211/TRANSFORMERS_2007_woq09m.jpg',
+    trailer_url: 'https://res.cloudinary.com/dutvfefbe/video/upload/v1778157560/YTDown_YouTube_TRANSFORMERS-2007-Movie-Clip-Mikaela-Che_Media_5mJIUdS6juA_001_720p_wsbrkt.mp4',
+    genre: 'Action',
+    release_year: 2007,
+    tier_required: 'starter'
+  },
+  {
+    id: 17,
+    title: 'The Notebook',
+    description: 'The story is told as a narrative within a narrative. In the modern day, an elderly man named Duke reads from a weathered notebook to a fellow nursing home resident who suffers from dementia. He tells her the story of two young lovers in the 1940s.',
+    thumbnail_url: 'https://res.cloudinary.com/dutvfefbe/image/upload/v1778157777/The_Notebook_s4kuad.jpg',
+    trailer_url: '',
+    genre: 'Romance',
+    release_year: 2004,
+    tier_required: 'plus'
+  },
+  {
+    id: 18,
+    title: 'Titanic',
+    description: 'James Camerons Titanic (1997) is a cinematic colossus that blends historical tragedy with a fictional "star-crossed lovers" narrative. It remains one of the highest-grossing films of all time, famous for its technical ambition and its heartbreaking portrayal of the "unsinkable" ships final hours.',
+    thumbnail_url: 'https://res.cloudinary.com/dutvfefbe/image/upload/v1778158059/download_1_vngsur.jpg',
+    trailer_url: '',
+    genre: 'Romance',
+    release_year: 1997,
+    tier_required: 'premium'
+  },
+  {
+    id: 19,
+    title: 'IT',
+    description: 'In the small town of Derry, Maine, children have been disappearing at an alarming rate. The story begins with the tragic disappearance of young Georgie Denbrough during a rainstorm—a disappearance involving a paper boat, a storm drain, and a haunting pair of yellow eyes. A year later, Georgies older brother Bill and his group of misfit friends—self-dubbed "The Losers Club"—discover they are all being stalked by the same entity. This shape-shifting predator, which they call "IT," primarily appears as Pennywise the Dancing Clown, a nightmare-inducing figure that feeds on the specific fears of its victims.',
+    thumbnail_url: 'https://res.cloudinary.com/dutvfefbe/image/upload/v1778158705/It__Special_Edition_2017_-_It__Special_Edition_2017_-_DVD_kn3ot2.jpg',
+    trailer_url: '',
+    genre: 'Horror',
+    release_year: 2017,
+    tier_required: 'premium'
+  },
+  {
+    id: 20,
+    title: '',
+    description: '',
+    thumbnail_url: '',
+    trailer_url: '',
     genre: 'Animation',
     release_year: 2025,
     tier_required: 'starter'
-  }
+  },
+  {
+    id: 21,
+    title: '',
+    description: '',
+    thumbnail_url: '',
+    trailer_url: '',
+    genre: 'Animation',
+    release_year: 2025,
+    tier_required: 'starter'
+  },
+  {
+    id: 22,
+    title: '',
+    description: '',
+    thumbnail_url: '',
+    trailer_url: '',
+    genre: 'Animation',
+    release_year: 2025,
+    tier_required: 'starter'
+  },
+  {
+    id: 23,
+    title: '',
+    description: '',
+    thumbnail_url: '',
+    trailer_url: '',
+    genre: 'Animation',
+    release_year: 2025,
+    tier_required: 'starter'
+  },
 ];
 
 export async function getMovies() {
