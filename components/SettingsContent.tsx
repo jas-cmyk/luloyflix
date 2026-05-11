@@ -13,9 +13,10 @@ interface SettingsContentProps {
   user: any;
   favoriteMovies: any[];
   recentMovies: any[];
+  mostWatchedMovies: any[];
 }
 
-export default function SettingsContent({ user, favoriteMovies, recentMovies }: SettingsContentProps) {
+export default function SettingsContent({ user, favoriteMovies, recentMovies, mostWatchedMovies }: SettingsContentProps) {
   const { t } = useLanguage();
   const [loadingTier, setLoadingTier] = useState<Tier | null>(null);
 
@@ -119,6 +120,25 @@ export default function SettingsContent({ user, favoriteMovies, recentMovies }: 
               </div>
             ) : (
               <p className="text-sm text-muted-foreground">{t('no_history')}</p>
+            )}
+          </section>
+
+          {/* Most Watched Section */}
+          <section>
+            <h2 className="text-2xl font-bold mb-6">{t('most_watched')}</h2>
+            {mostWatchedMovies.length > 0 ? (
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                {mostWatchedMovies.map((movie) => (
+                  <Link key={movie.id} href={`/movies/${movie.id}`} className="group">
+                    <div className="aspect-[2/3] rounded-xl overflow-hidden mb-2 relative">
+                      <img src={movie.thumbnail_url} alt={movie.title} className="w-full h-full object-cover transition duration-300 group-hover:scale-110" />
+                    </div>
+                    <p className="text-xs font-bold truncate">{movie.title}</p>
+                  </Link>
+                ))}
+              </div>
+            ) : (
+              <p className="text-sm text-muted-foreground">{t('no_most_watched')}</p>
             )}
           </section>
 

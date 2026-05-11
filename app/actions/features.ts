@@ -77,6 +77,19 @@ export async function getRecentlyWatched(userId: number) {
   }
 }
 
+export async function getMostWatched(limit: number = 10) {
+  try {
+    await createFeaturesTables();
+    const [rows]: any = await pool.query(
+      'SELECT movie_id, COUNT(*) as watch_count FROM recently_watched GROUP BY movie_id ORDER BY watch_count DESC LIMIT ?',
+      [limit]
+    );
+    return rows.map((r: any) => r.movie_id);
+  } catch (error) {
+    return [];
+  }
+}
+
 export async function rateMovie(userId: number, movieId: number, rating: number) {
   try {
     await createFeaturesTables();

@@ -103,6 +103,8 @@ const translations: Translations = {
     select: 'Select',
     no_history: 'No recently watched movies.',
     no_favorites: 'No favorite movies yet.',
+    most_watched: 'Most Watched',
+    no_most_watched: 'No most watched movies yet.',
   },
   tl: {
     search: 'Maghanap ng pelikula...',
@@ -147,6 +149,8 @@ const translations: Translations = {
     select: 'Pumili',
     no_history: 'Walang kamakailang pinanood na mga pelikula.',
     no_favorites: 'Wala pang paboritong pelikula.',
+    most_watched: 'Pinaka-Pinapanood',
+    no_most_watched: 'Wala pang pinaka-pinapanood na mga pelikula.',
   },
 };
 
