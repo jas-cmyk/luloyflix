@@ -225,9 +225,9 @@ const MOVIES: Movie[] = [
   },
   {
     id: 20,
-    title: '',
-    description: '',
-    thumbnail_url: '',
+    title: 'Swapped',
+    description: 'A tiny woodland creature and a majestic bird suddenly swap bodies, forcing them to team up to survive the wildest adventure of their lives.',
+    thumbnail_url: 'https://res.cloudinary.com/dutvfefbe/image/upload/v1778489773/Swapped_-_Getauscht_2026_yflphk.jpg',
     trailer_url: '',
     genre: 'Animation',
     release_year: 2025,
@@ -235,33 +235,83 @@ const MOVIES: Movie[] = [
   },
   {
     id: 21,
-    title: '',
-    description: '',
-    thumbnail_url: '',
+    title: 'The Secret Life of Pets',
+    description: 'The quiet life of a terrier named Max is upended when his owner takes in Duke, a stray whom Max instantly dislikes.',
+    thumbnail_url: 'https://res.cloudinary.com/dutvfefbe/image/upload/v1778490363/Pets_A_Vida_Secreta_dos_Nossos_Bichos_-_2016_liwztn.jpg',
     trailer_url: '',
     genre: 'Animation',
-    release_year: 2025,
+    release_year: 2016,
     tier_required: 'starter'
   },
   {
     id: 22,
-    title: '',
-    description: '',
-    thumbnail_url: '',
+    title: 'Train to Busan',
+    description: 'While a zombie virus breaks out in South Korea, passengers struggle to survive on the train from Seoul to Busan.',
+    thumbnail_url: 'https://res.cloudinary.com/dutvfefbe/image/upload/v1778490736/TRAIN_TO_BUSAN_2016_cljxao.jpg',
     trailer_url: '',
-    genre: 'Animation',
-    release_year: 2025,
+    genre: 'Horror',
+    release_year: 2016,
     tier_required: 'starter'
   },
   {
     id: 23,
-    title: '',
-    description: '',
-    thumbnail_url: '',
+    title: 'Once We Were Us ',
+    description: 'Two former lovers cross paths on a flight to Korea, stirring memories of their chance meeting in 2008, when they found love amid Seoul\'s chaos before life pulled them apart.',
+    thumbnail_url: 'https://res.cloudinary.com/dutvfefbe/image/upload/v1778491119/Once_We_Were_Us_hn5slw.jpg',
     trailer_url: '',
-    genre: 'Animation',
+    genre: 'Romance',
     release_year: 2025,
-    tier_required: 'starter'
+    tier_required: 'premium'
+  },
+  {
+    id: 24,
+    title: 'Strong Girl Bong-soon',
+    description: 'Do Bong-soon is a woman born with superhuman strength that comes from the long line of women possessing it. when Ahn Min Hyuk, the CEO of ainsoft, a gaming company witnesses her strength he hires her as his personal bodyguard.',
+    thumbnail_url: 'https://res.cloudinary.com/dutvfefbe/image/upload/v1778491445/download_2_corxrb.jpg',
+    trailer_url: '',
+    genre: 'Romance',
+    release_year: 2016,
+    tier_required: 'premium'
+  },
+  {
+    id: 25,
+    title: 'Hitman: Agent Jun',
+    description: 'While heavily drunk, an unsuccessful comic book writer draws a comic about his life as a former NIS hitman, and runs into trouble when it gets posted online',
+    thumbnail_url: 'https://res.cloudinary.com/dutvfefbe/image/upload/v1778492043/Hitman__Agent_Jun_y87ino.jpg',
+    trailer_url: '',
+    genre: 'Action',
+    release_year: 2019,
+    tier_required: 'premium'
+  },
+  {
+    id: 26,
+    title: 'Taken',
+    description: 'A retired CIA agent travels across Europe and relies on his old skills to save his estranged daughter, who has been kidnapped while on a trip to Paris.',
+    thumbnail_url: 'https://res.cloudinary.com/dutvfefbe/image/upload/v1778492294/Taken_qltaqt.jpg',
+    trailer_url: '',
+    genre: 'Action',
+    release_year: 2009,
+    tier_required: 'premium'
+  },
+  {
+    id: 27,
+    title: 'The Last Witch Hunter',
+    description: 'The last witch hunter is all that stands between humanity and the combined forces of the most horrifying witches in history.',
+    thumbnail_url: 'https://res.cloudinary.com/dutvfefbe/image/upload/v1778492590/download_3_jc0knx.jpg',
+    trailer_url: '',
+    genre: 'Action',
+    release_year: 2015,
+    tier_required: 'premium'
+  },
+  {
+    id: 28,
+    title: 'Hellboy',
+    description: 'A demon raised from infancy after being conjured by and rescued from the Nazis, grows up to become a defender against the forces of darkness.',
+    thumbnail_url: 'https://res.cloudinary.com/dutvfefbe/image/upload/v1778492858/Love_the_Hellboy_films_a6j6im.jpg',
+    trailer_url: '',
+    genre: 'Action',
+    release_year: 2004,
+    tier_required: 'premium'
   },
 ];
 
