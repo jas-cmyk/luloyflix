@@ -9,9 +9,12 @@ import { Trophy, TrendingUp } from "lucide-react";
 export const dynamic = "force-dynamic";
 
 export default async function MostViewedPage() {
-  const ranking = await getMostViewedMovies(10);
-  const allMovies = await getMovies();
-  const user = await getCurrentUser();
+  const [ranking, allMovies, user] = await Promise.all([
+    getMostViewedMovies(10),
+    getMovies(),
+    getCurrentUser()
+  ]);
+  
   const userTier: Tier = user?.subscription_tier || 'none';
 
   const topMovies = ranking

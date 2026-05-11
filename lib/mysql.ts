@@ -6,12 +6,19 @@ declare global {
 }
 
 const getPoolConfig = (): mysql.PoolOptions => {
+  const commonConfig: Partial<mysql.PoolOptions> = {
+    waitForConnections: true,
+    connectionLimit: 20, // Increased from 10
+    queueLimit: 0,
+    enableKeepAlive: true,
+    keepAliveInitialDelay: 10000,
+    idleTimeout: 60000, // 60 seconds
+  };
+
   if (process.env.DATABASE_URL) {
     return {
       uri: process.env.DATABASE_URL,
-      waitForConnections: true,
-      connectionLimit: 10,
-      queueLimit: 0,
+      ...commonConfig,
       ssl: process.env.DATABASE_SSL_CA ? {
         ca: process.env.DATABASE_SSL_CA,
         rejectUnauthorized: true
@@ -27,9 +34,7 @@ const getPoolConfig = (): mysql.PoolOptions => {
     password: process.env.DATABASE_PASSWORD,
     database: process.env.DATABASE_NAME,
     port: parseInt(process.env.DATABASE_PORT || '3306'),
-    waitForConnections: true,
-    connectionLimit: 10,
-    queueLimit: 0,
+    ...commonConfig,
     ssl: process.env.DATABASE_SSL_CA ? {
       ca: process.env.DATABASE_SSL_CA,
       rejectUnauthorized: true

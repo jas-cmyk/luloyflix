@@ -13,16 +13,21 @@ interface MoviePageProps {
 export const dynamic = "force-dynamic";
 
 export default async function MovieDetailPage({ params }: MoviePageProps) {
-  const { id } = await params;
-  const movie = await getMovieById(Number(id));
+  const { id: idStr } = await params;
+  const id = Number(idStr);
+  const movie = await getMovieById(id);
 
   if (!movie) {
     notFound();
   }
 
   const user = await getCurrentUser();
-  const favorite = user ? await isFavorite(user.id, movie.id) : false;
-  const userRating = user ? await getUserRating(user.id, movie.id) : 0;
+  
+  // Parallelize secondary data fetching
+  const [favorite, userRating] = await Promise.all([
+    user ? isFavorite(user.id, movie.id) : Promise.resolve(false),
+    user ? getUserRating(user.id, movie.id) : Promise.resolve(0)
+  ]);
 
   return (
     <MovieDetailContent 

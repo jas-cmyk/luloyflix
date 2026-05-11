@@ -2,11 +2,9 @@
 
 import pool from '@/lib/mysql';
 import { revalidatePath } from 'next/cache';
-import { createFeaturesTables } from '@/lib/db-init';
 
 export async function toggleFavorite(userId: number, movieId: number) {
   try {
-    await createFeaturesTables();
     const [existing]: any = await pool.query(
       'SELECT id FROM favorites WHERE user_id = ? AND movie_id = ?',
       [userId, movieId]
@@ -28,7 +26,6 @@ export async function toggleFavorite(userId: number, movieId: number) {
 
 export async function isFavorite(userId: number, movieId: number) {
   try {
-    await createFeaturesTables();
     const [rows]: any = await pool.query(
       'SELECT id FROM favorites WHERE user_id = ? AND movie_id = ?',
       [userId, movieId]
@@ -41,7 +38,6 @@ export async function isFavorite(userId: number, movieId: number) {
 
 export async function getFavorites(userId: number) {
   try {
-    await createFeaturesTables();
     const [rows]: any = await pool.query('SELECT movie_id FROM favorites WHERE user_id = ?', [userId]);
     return rows.map((r: any) => r.movie_id);
   } catch (error) {
@@ -51,7 +47,6 @@ export async function getFavorites(userId: number) {
 
 export async function trackRecentlyWatched(userId: number, movieId: number) {
   try {
-    await createFeaturesTables();
     await pool.query(
       'INSERT INTO recently_watched (user_id, movie_id) VALUES (?, ?) ON DUPLICATE KEY UPDATE watched_at = CURRENT_TIMESTAMP',
       [userId, movieId]
@@ -66,7 +61,6 @@ export async function trackRecentlyWatched(userId: number, movieId: number) {
 
 export async function getRecentlyWatched(userId: number) {
   try {
-    await createFeaturesTables();
     const [rows]: any = await pool.query(
       'SELECT movie_id FROM recently_watched WHERE user_id = ? ORDER BY watched_at DESC LIMIT 10',
       [userId]
@@ -79,7 +73,6 @@ export async function getRecentlyWatched(userId: number) {
 
 export async function getMostWatched(limit: number = 10) {
   try {
-    await createFeaturesTables();
     const [rows]: any = await pool.query(
       'SELECT movie_id, COUNT(*) as watch_count FROM recently_watched GROUP BY movie_id ORDER BY watch_count DESC LIMIT ?',
       [limit]
@@ -92,7 +85,6 @@ export async function getMostWatched(limit: number = 10) {
 
 export async function rateMovie(userId: number, movieId: number, rating: number) {
   try {
-    await createFeaturesTables();
     await pool.query(
       'INSERT INTO ratings (user_id, movie_id, rating) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE rating = VALUES(rating)',
       [userId, movieId, rating]
@@ -107,7 +99,6 @@ export async function rateMovie(userId: number, movieId: number, rating: number)
 
 export async function getMovieRating(movieId: number) {
   try {
-    await createFeaturesTables();
     const [rows]: any = await pool.query(
       'SELECT AVG(rating) as average, COUNT(*) as count FROM ratings WHERE movie_id = ?',
       [movieId]
@@ -124,7 +115,6 @@ export async function getMovieRating(movieId: number) {
 export async function getMovieRatings(movieIds: number[]): Promise<Record<number, { average: number, count: number }>> {
   if (!movieIds.length) return {};
   try {
-    await createFeaturesTables();
     const [rows]: any = await pool.query(
       `SELECT movie_id, AVG(rating) as average, COUNT(*) as count 
        FROM ratings 
@@ -149,7 +139,6 @@ export async function getMovieRatings(movieIds: number[]): Promise<Record<number
 
 export async function getUserRating(userId: number, movieId: number) {
   try {
-    await createFeaturesTables();
     const [rows]: any = await pool.query(
       'SELECT rating FROM ratings WHERE user_id = ? AND movie_id = ?',
       [userId, movieId]
@@ -162,7 +151,6 @@ export async function getUserRating(userId: number, movieId: number) {
 
 export async function getMostViewedMovies(limit: number = 10): Promise<{ movie_id: number, views: number }[]> {
   try {
-    await createFeaturesTables();
     const [rows]: any = await pool.query(
       `SELECT movie_id, COUNT(*) as views 
        FROM recently_watched 
@@ -180,7 +168,6 @@ export async function getMostViewedMovies(limit: number = 10): Promise<{ movie_i
 
 export async function getMostRatedMovies(limit: number = 10): Promise<{ movie_id: number, average: number, count: number }[]> {
   try {
-    await createFeaturesTables();
     const [rows]: any = await pool.query(
       `SELECT movie_id, AVG(rating) as average, COUNT(*) as count 
        FROM ratings 

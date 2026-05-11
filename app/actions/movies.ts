@@ -275,8 +275,6 @@ export async function getMovieById(id: number) {
 
 export async function updateSubscription(userId: number, tier: Tier) {
   try {
-    await createTransactionsTable();
-    
     // Get current tier to check if it's an upgrade or downgrade
     const [userRows]: any = await pool.query('SELECT subscription_tier FROM users WHERE id = ?', [userId]);
     const currentTier = userRows[0]?.subscription_tier || 'none';
@@ -307,7 +305,6 @@ export async function updateSubscription(userId: number, tier: Tier) {
 
 export async function getTransactions(userId: number): Promise<Transaction[]> {
   try {
-    await createTransactionsTable();
     const [rows]: any = await pool.query(
       'SELECT * FROM transactions WHERE user_id = ? ORDER BY created_at DESC',
       [userId]

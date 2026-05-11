@@ -9,8 +9,12 @@ import { redirect } from "next/navigation";
 export default async function GenrePage({ params }: { params: Promise<{ name: string }> }) {
   const { name } = await params;
   const genreName = decodeURIComponent(name);
-  const allMovies = await getMovies();
-  const user = await getCurrentUser();
+  
+  const [allMovies, user] = await Promise.all([
+    getMovies(),
+    getCurrentUser()
+  ]);
+  
   const userTier: Tier = user?.subscription_tier || 'none';
   
   const genreMovies = allMovies.filter(

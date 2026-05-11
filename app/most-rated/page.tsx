@@ -8,9 +8,12 @@ import { Trophy, Star } from "lucide-react";
 export const dynamic = "force-dynamic";
 
 export default async function MostRatedPage() {
-  const ranking = await getMostRatedMovies(10);
-  const allMovies = await getMovies();
-  const user = await getCurrentUser();
+  const [ranking, allMovies, user] = await Promise.all([
+    getMostRatedMovies(10),
+    getMovies(),
+    getCurrentUser()
+  ]);
+  
   const userTier: Tier = user?.subscription_tier || 'none';
 
   const topMovies = ranking

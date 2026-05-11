@@ -1,7 +1,7 @@
 export const dynamic = "force-dynamic";
 import { getCurrentUser } from "@/lib/auth";
 import { getMovies } from "./actions/movies";
-import { getMovieRating } from "./actions/features";
+import { getMovieRatings } from "./actions/features";
 import HomeContent from "@/components/HomeContent";
 
 export default async function Home({
@@ -10,18 +10,23 @@ export default async function Home({
   searchParams: Promise<{ q?: string }>;
 }) {
   const { q } = await searchParams;
-  let movies = await getMovies();
-  const user = await getCurrentUser();
+  
+  // Fetch movies and user in parallel
+  const [movies, user] = await Promise.all([
+    getMovies(),
+    getCurrentUser()
+  ]);
 
+  let filteredMovies = movies;
   if (q) {
-    movies = movies.filter((movie) =>
+    filteredMovies = movies.filter((movie) =>
       movie.title.toLowerCase().includes(q.toLowerCase()) ||
       movie.genre.toLowerCase().includes(q.toLowerCase())
     );
   }
 
   // Group movies by genre
-  const groupedMovies = movies.reduce((acc, movie) => {
+  const groupedMovies = filteredMovies.reduce((acc, movie) => {
     const genre = movie.genre || "Other";
     if (!acc[genre]) {
       acc[genre] = [];
@@ -30,12 +35,9 @@ export default async function Home({
     return acc;
   }, {} as Record<string, typeof movies>);
 
-  let movieRatings: Record<number, { average: number, count: number }> = {};
-
-  // Fetch ratings for all movies
-  for (const movie of movies) {
-    movieRatings[movie.id] = await getMovieRating(movie.id);
-  }
+  // Fetch all ratings in a single query (Bulk optimization)
+  const movieIds = filteredMovies.map(m => m.id);
+  const movieRatings = await getMovieRatings(movieIds);
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -43,7 +45,7 @@ export default async function Home({
         <HomeContent 
           q={q} 
           groupedMovies={groupedMovies} 
-          movies={movies}
+          movies={filteredMovies}
           movieRatings={movieRatings}
           userTier={user?.subscription_tier || 'none'}
         />
