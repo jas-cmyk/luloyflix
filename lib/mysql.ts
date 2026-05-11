@@ -10,11 +10,12 @@ declare global {
 const getPoolConfig = (): mysql.PoolOptions => {
   const commonConfig: Partial<mysql.PoolOptions> = {
     waitForConnections: true,
-    connectionLimit: 20,
+    connectionLimit: 5, // Reduced from 20 to 5 to avoid "Too many connections"
+    maxIdle: 5, // Max idle connections
+    idleTimeout: 30000, // Reduced from 60s to 30s to release connections faster
     queueLimit: 0,
     enableKeepAlive: true,
     keepAliveInitialDelay: 10000,
-    idleTimeout: 60000,
   };
 
   // Fix escaped newlines in CA string if pulled from Vercel/CLI
@@ -52,24 +53,27 @@ if (process.env.NODE_ENV !== 'production') {
   global.pool = pool;
 }
 
-// Auto-initialize database schema
-if (!global.dbInitialized) {
-  // We use a dynamic import to avoid circular dependencies with lib/db-init.ts
-  import('./db-init').then(async (m) => {
-    try {
-      console.log('Initializing database schema...');
-      await m.createUsersTable();
-      await m.createPurchasesTable();
-      await m.createTransactionsTable();
-      await m.createAdsTable();
-      await m.createRedeemCodesTable();
-      await m.createFeaturesTables();
-      global.dbInitialized = true;
-      console.log('Database schema initialized successfully.');
-    } catch (error) {
-      console.error('Failed to auto-initialize database:', error);
-    }
-  });
-}
+// Robust auto-initialization
+const initializeDb = async () => {
+  if (global.dbInitialized) return;
+  global.dbInitialized = true; // Mark as initialized immediately to prevent concurrent runs
+
+  try {
+    const m = await import('./db-init');
+    console.log('Initializing database schema...');
+    await m.createUsersTable();
+    await m.createPurchasesTable();
+    await m.createTransactionsTable();
+    await m.createAdsTable();
+    await m.createRedeemCodesTable();
+    await m.createFeaturesTables();
+    console.log('Database schema initialized successfully.');
+  } catch (error) {
+    console.error('Failed to auto-initialize database:', error);
+    global.dbInitialized = false; // Reset on failure so it can retry next time
+  }
+};
+
+initializeDb();
 
 export default pool;
