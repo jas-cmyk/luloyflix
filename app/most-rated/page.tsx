@@ -43,37 +43,37 @@ export default async function MostRatedPage() {
 
       <div className="space-y-8 max-w-5xl mx-auto">
         {topMovies.map((movie, index) => (
-          <div key={movie.id} className="flex items-center gap-6 group">
-            <div className="text-5xl md:text-7xl font-black text-muted-foreground/20 group-hover:text-primary/20 transition-colors w-16 md:w-24 shrink-0 italic">
+          <div key={movie.id} className="flex items-center gap-4 md:gap-6 group">
+            <div className="text-4xl md:text-7xl font-black text-muted-foreground/20 group-hover:text-primary/20 transition-colors w-12 md:w-24 shrink-0 italic">
               #{index + 1}
             </div>
-            <div className="flex-1 bg-card rounded-3xl border border-border/50 p-4 md:p-6 shadow-xl flex gap-6 items-center hover:border-primary/30 transition-all overflow-hidden relative">
-               <div className="w-24 md:w-32 aspect-[2/3] rounded-xl overflow-hidden shrink-0 shadow-lg">
+            <div className="flex-1 bg-card rounded-2xl md:rounded-3xl border border-border/50 p-3 md:p-6 shadow-xl flex gap-4 md:gap-6 items-center hover:border-primary/30 transition-all overflow-hidden relative">
+               <div className="w-20 md:w-32 aspect-[2/3] rounded-lg md:rounded-xl overflow-hidden shrink-0 shadow-lg">
                  <img src={movie.thumbnail_url} alt={movie.title} className="w-full h-full object-cover" />
                </div>
                <div className="flex-1 min-w-0">
-                 <div className="flex flex-wrap items-center gap-2 mb-2">
-                   <span className="px-2 py-0.5 bg-primary/10 text-primary text-[10px] font-bold uppercase rounded-md">
-                     {movie.genre}
+                 <div className="flex flex-wrap items-center gap-2 mb-1 md:mb-2">
+                   <span className="px-1.5 py-0.5 bg-primary/10 text-primary text-[9px] md:text-[10px] font-bold uppercase rounded-md">
+                     {movie.genres.length < 2 ? movie.genres[0] : movie.genres[0] + " + " + (movie.genres.length - 1)}
                    </span>
-                   <span className="text-xs text-muted-foreground">{movie.release_year}</span>
+                   <span className="text-[10px] md:text-xs text-muted-foreground">{movie.release_year}</span>
                  </div>
-                 <h2 className="text-xl md:text-2xl font-bold truncate mb-2">{movie.title}</h2>
-                 <p className="text-sm text-muted-foreground line-clamp-2 hidden md:block mb-4">{movie.description}</p>
-                 <div className="flex items-center gap-6">
-                    <div className="flex items-center gap-1.5">
-                       <Star className="h-4 w-4 text-yellow-500 fill-yellow-500" />
-                       <span className="font-black text-lg">{movie.average.toFixed(1)}</span>
-                       <span className="text-xs text-muted-foreground">({movie.votes} {movie.votes === 1 ? 'vote' : 'votes'})</span>
+                 <h2 className="text-base md:text-2xl font-bold truncate mb-1 md:mb-2">{movie.title}</h2>
+                 <p className="text-xs md:text-sm text-muted-foreground line-clamp-2 hidden sm:block mb-3 md:mb-4">{movie.description}</p>
+                 <div className="flex items-center gap-4 md:gap-6">
+                    <div className="flex items-center gap-1 md:gap-1.5">
+                       <Star className="h-3 w-3 md:h-4 md:w-4 text-yellow-500 fill-yellow-500" />
+                       <span className="font-black text-sm md:text-lg">{movie.average.toFixed(1)}</span>
+                       <span className="text-[10px] md:text-xs text-muted-foreground hidden xs:inline">({movie.votes})</span>
                     </div>
-                    <Link href={`/movies/${movie.id}`} className="text-xs font-bold text-primary hover:underline">
+                    <Link href={`/movies/${movie.id}`} className="text-[10px] md:text-xs font-bold text-primary hover:underline">
                        View Details
                     </Link>
                  </div>
                </div>
                {index === 0 && (
-                 <div className="absolute top-4 right-4 text-yellow-500">
-                    <Trophy className="h-6 w-6" />
+                 <div className="absolute top-3 right-3 md:top-4 md:right-4 text-yellow-500">
+                    <Trophy className="h-4 w-4 md:h-6 md:w-6" />
                  </div>
                )}
             </div>

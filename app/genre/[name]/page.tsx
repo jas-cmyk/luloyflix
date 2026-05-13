@@ -1,4 +1,4 @@
-import { getMovies } from "@/app/actions/movies";
+import { getMovies, getUserPurchases } from "@/app/actions/movies";
 import { getMovieRatings } from "@/app/actions/features";
 import { getCurrentUser } from "@/lib/auth";
 import MovieCard from "@/components/MovieCard";
@@ -16,9 +16,10 @@ export default async function GenrePage({ params }: { params: Promise<{ name: st
   ]);
   
   const userTier: Tier = user?.subscription_tier || 'none';
+  const userPurchases = user ? await getUserPurchases(user.id) : [];
   
   const genreMovies = allMovies.filter(
-    (movie) => movie.genre.toLowerCase() === genreName.toLowerCase()
+    (movie) => movie.genres.some(g => g.toLowerCase() === genreName.toLowerCase())
   );
 
   if (genreMovies.length === 0) {
@@ -50,6 +51,7 @@ export default async function GenrePage({ params }: { params: Promise<{ name: st
             movie={movie} 
             averageRating={movieRatings[movie.id]?.average || 0}
             userTier={userTier}
+            isPurchased={userPurchases.includes(movie.id)}
           />
         ))}
       </div>

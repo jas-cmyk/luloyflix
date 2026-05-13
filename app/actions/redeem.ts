@@ -59,6 +59,15 @@ export async function redeemCode(userId: number, code: string) {
         'INSERT INTO transactions (user_id, type, description, amount) VALUES (?, ?, ?, ?)',
         [userId, 'redeem', `Redeemed code for movie: ${movie?.title || 'Unknown'}`, 0]
       );
+    } else if (benefitType === 'credit') {
+      const credits = parseInt(benefitValue);
+      await pool.query('UPDATE users SET credits = credits + ? WHERE id = ?', [credits, userId]);
+      successMessage = `Added ${credits} credits to your account!`;
+
+      await pool.query(
+        'INSERT INTO transactions (user_id, type, description, amount) VALUES (?, ?, ?, ?)',
+        [userId, 'redeem', `Redeemed code for ${credits} credits`, credits]
+      );
     }
 
     // Mark code as used

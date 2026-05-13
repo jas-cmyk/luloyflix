@@ -4,29 +4,22 @@ import Link from "next/link";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Star } from "lucide-react";
 import { useLanguage } from "@/lib/contexts";
-import { Tier, getTierAccess, cn } from "@/lib/utils";
-
-interface Movie {
-  id: number;
-  title: string;
-  description: string;
-  thumbnail_url: string;
-  genre: string;
-  release_year: number;
-  tier_required: Tier;
-}
+import { Tier, cn } from "@/lib/utils";
+import { Movie } from "@/app/actions/movies";
 
 export default function MovieCard({ 
   movie, 
   averageRating,
-  userTier 
+  userTier,
+  isPurchased = false
 }: { 
   movie: Movie, 
   averageRating: number,
-  userTier: Tier
+  userTier: Tier,
+  isPurchased?: boolean
 }) {
   const { t } = useLanguage();
-  const hasAccess = getTierAccess(userTier, movie.tier_required);
+  const hasAccess = isPurchased;
 
   const tierColors = {
     none: 'bg-slate-500',
@@ -46,19 +39,19 @@ export default function MovieCard({
           />
           <div className="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-950/30 to-transparent" />
           
-          {/* Tier Badge */}
+          {/* Price/Owned Badge */}
           <div className="absolute top-3 left-3 z-10">
             <span className={cn(
               "inline-flex items-center rounded-md px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-white shadow-sm",
-              tierColors[movie.tier_required]
+              hasAccess ? "bg-green-500" : "bg-slate-900/80"
             )}>
-              {t(movie.tier_required)}
+              {hasAccess ? "Owned" : `Credits: ${movie.price}`}
             </span>
           </div>
 
           <div className="absolute bottom-0 left-0 right-0 p-4">
             <span className="inline-flex items-center rounded-full bg-white/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.24em] text-white/85">
-              {movie.genre}
+              {movie.genres.length < 2 ? movie.genres[0] : movie.genres[0] + " + " + (movie.genres.length - 1)}
             </span>
             <div className="flex items-center gap-1 mt-2">
               <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />

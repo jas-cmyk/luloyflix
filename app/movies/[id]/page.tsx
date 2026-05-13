@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { getMovieById } from "@/app/actions/movies";
+import { getMovieById, hasPurchased } from "@/app/actions/movies";
 import { getCurrentUser } from "@/lib/auth";
 import { isFavorite, getUserRating } from "@/app/actions/features";
 import MovieDetailContent from "@/components/MovieDetailContent";
@@ -24,9 +24,10 @@ export default async function MovieDetailPage({ params }: MoviePageProps) {
   const user = await getCurrentUser();
   
   // Parallelize secondary data fetching
-  const [favorite, userRating] = await Promise.all([
+  const [favorite, userRating, purchased] = await Promise.all([
     user ? isFavorite(user.id, movie.id) : Promise.resolve(false),
-    user ? getUserRating(user.id, movie.id) : Promise.resolve(0)
+    user ? getUserRating(user.id, movie.id) : Promise.resolve(0),
+    user ? hasPurchased(user.id, movie.id) : Promise.resolve(false)
   ]);
 
   return (
@@ -35,6 +36,7 @@ export default async function MovieDetailPage({ params }: MoviePageProps) {
       user={user} 
       isFavorite={favorite}
       userRating={userRating}
+      isPurchased={purchased}
     />
   );
 }

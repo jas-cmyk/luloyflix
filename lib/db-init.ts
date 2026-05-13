@@ -7,25 +7,27 @@ export async function createUsersTable() {
       email VARCHAR(255) NOT NULL UNIQUE,
       password VARCHAR(255) NOT NULL,
       subscription_tier ENUM('none', 'starter', 'plus', 'premium') DEFAULT 'none',
+      credits INT DEFAULT 0,
       is_admin BOOLEAN DEFAULT FALSE,
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )
   `;
   await pool.query(query);
 
-  // Migration to add subscription_tier if it doesn't exist (for existing tables)
+  // Migration to add subscription_tier if it doesn't exist
   try {
     await pool.query("ALTER TABLE users ADD COLUMN subscription_tier ENUM('none', 'starter', 'plus', 'premium') DEFAULT 'none'");
-  } catch (e) {
-    // Ignore error if column already exists
-  }
+  } catch (e) {}
+
+  // Migration to add credits if it doesn't exist
+  try {
+    await pool.query("ALTER TABLE users ADD COLUMN credits INT DEFAULT 0");
+  } catch (e) {}
 
   // Migration to add is_admin if it doesn't exist
   try {
     await pool.query("ALTER TABLE users ADD COLUMN is_admin BOOLEAN DEFAULT FALSE");
-  } catch (e) {
-    // Ignore error if column already exists
-  }
+  } catch (e) {}
 }
 
 export async function createPurchasesTable() {

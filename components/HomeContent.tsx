@@ -5,6 +5,7 @@ import MovieCard from "@/components/MovieCard";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import AdBanner from "@/components/AdBanner";
+import FeaturedSlider from "@/components/FeaturedSlider";
 
 import { Tier } from "@/lib/utils";
 
@@ -14,6 +15,8 @@ interface HomeContentProps {
   movies: any[];
   movieRatings: Record<number, { average: number, count: number }>;
   userTier: Tier;
+  userPurchases: number[];
+  mostViewedMovies: any[];
 }
 
 export default function HomeContent({ 
@@ -21,12 +24,20 @@ export default function HomeContent({
   groupedMovies, 
   movies, 
   movieRatings,
-  userTier
+  userTier,
+  userPurchases,
+  mostViewedMovies
 }: HomeContentProps) {
   const { t } = useLanguage();
 
   return (
     <>
+      {!q && mostViewedMovies.length > 0 && (
+        <div className="mb-16">
+          <FeaturedSlider movies={mostViewedMovies} />
+        </div>
+      )}
+
       {q ? (
         <>
           <div className="mb-12 text-center">
@@ -46,6 +57,7 @@ export default function HomeContent({
                   movie={movie} 
                   averageRating={movieRatings[movie.id]?.average || 0}
                   userTier={userTier}
+                  isPurchased={userPurchases.includes(movie.id)}
                 />
               ))}
             </div>
@@ -86,6 +98,7 @@ export default function HomeContent({
                       movie={movie} 
                       averageRating={movieRatings[movie.id]?.average || 0}
                       userTier={userTier}
+                      isPurchased={userPurchases.includes(movie.id)}
                     />
                   ))}
                 </div>

@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { Menu, X, Settings, Moon, Sun, Globe, Home, Heart, History, LogOut, LogIn, UserPlus, TrendingUp, Star, Shield } from 'lucide-react';
+import { Menu, X, Settings, Moon, Sun, Globe, Home, Heart, History, LogOut, LogIn, UserPlus, TrendingUp, Star, Shield, Zap, Wallet } from 'lucide-react';
 import { Button } from './ui/button';
 import { useTheme, useLanguage } from '@/lib/contexts';
 import { cn } from '@/lib/utils';
@@ -21,6 +21,7 @@ export default function Sidebar({ user, logoutAction }: SidebarProps) {
 
   const navLinks = [
     { href: '/', label: t('home'), icon: Home },
+    { href: '/offers', label: 'Limited Time Offers', icon: Zap },
     { href: '/most-viewed', label: t('most_viewed'), icon: TrendingUp },
     { href: '/most-rated', label: t('most_rated'), icon: Star },
     ...(user ? [
@@ -73,9 +74,20 @@ export default function Sidebar({ user, logoutAction }: SidebarProps) {
 
           {/* User Profile Info */}
           {user && (
-            <div className="mb-8 p-4 bg-muted/50 rounded-xl">
-              <p className="text-sm font-medium truncate">{user.email}</p>
-              <p className="text-xs text-muted-foreground capitalize">{t('subscription')}: {t(user.subscription_tier || 'none')}</p>
+            <div className="mb-8 p-4 bg-muted/50 rounded-xl space-y-3">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium truncate max-w-[150px]">{user.email}</p>
+                  <p className="text-xs text-muted-foreground capitalize">{t('subscription')}: {t(user.subscription_tier || 'none')}</p>
+                </div>
+                <div className="flex flex-col items-end">
+                  <span className="text-[10px] text-muted-foreground uppercase font-bold tracking-wider mb-1">Balance</span>
+                  <div className="flex items-center gap-1.5">
+                    <Wallet className="h-4 w-4 text-primary" />
+                    <span className="text-sm font-black text-primary leading-none">{user.credits || 0} Credits</span>
+                  </div>
+                </div>
+              </div>
             </div>
           )}
 
